@@ -41,8 +41,8 @@ fillLight.position.set(-3, 1.5, 2);
 scene.add(fillLight);
 
 // ═══════════ PYRAMID GEOMETRY ═══════════
-const pyrH = 2.4;
-const pyrBase = 1.7;
+const pyrH = 1.4;
+const pyrBase = 1.9;
 const half = pyrBase / 2;
 const apex = new THREE.Vector3(0, pyrH, 0);
 const corners = [
@@ -95,6 +95,27 @@ const pyramidMat = new THREE.ShaderMaterial({
     varying vec3 vViewDir;
     varying float vHeight;
 
+    float hash21(vec2 p) {
+      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    }
+    float vnoise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x),
+                 mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), f.x), f.y);
+    }
+    float fbm(vec2 p) {
+      float v = 0.0;
+      float a = 0.5;
+      for (int i = 0; i < 4; i++) {
+        v += a * vnoise(p);
+        p *= 2.07;
+        a *= 0.5;
+      }
+      return v;
+    }
+
     void main() {
       float fresnel = 1.0 - abs(dot(vNormal, vViewDir));
       fresnel = pow(fresnel, 3.0);
@@ -110,17 +131,33 @@ const pyramidMat = new THREE.ShaderMaterial({
       float pulse = sin(vHeight * 12.0 - uTime * 3.0) * 0.5 + 0.5;
       pulse = pow(pulse, 8.0) * 0.3;
 
+      // ── Side-face patches (manchas) ──
+      // Project world position onto the face plane using normal for stable UVs
+      vec2 patchUv = vec2(vWorldPos.x + vWorldPos.z, vWorldPos.y * 1.6);
+      float patch = fbm(patchUv * 2.2 + 3.0);
+      float patchSlow = fbm(patchUv * 0.9 - 1.5 + uTime * 0.05);
+      // Dark spots (weathered patches)
+      float darkPatch = smoothstep(0.55, 0.78, patch) * 0.6;
+      // Bright bloom patches (energy-stained)
+      float brightPatch = smoothstep(0.62, 0.85, patchSlow) * 0.55;
+
       vec3 color = baseColor * 0.15;
       color += uEdgeColor * fresnel * 0.6;
       color += uCoreColor * scan;
       color += uCoreColor * pulse * (1.0 - vHeight);
+
+      // Apply patches: darken with gold tone, then bloom with blue tone
+      color *= 1.0 - darkPatch * 0.7;
+      color += uEdgeColor * darkPatch * 0.25;
+      color += uCoreColor * brightPatch * 0.45;
 
       // Iridescence
       float iri = sin(dot(vNormal, vec3(1.0, 0.5, 0.0)) * 4.0 + uTime) * 0.5 + 0.5;
       color += mix(uCoreColor, uEdgeColor, iri) * 0.05;
 
       float alpha = 0.06 + fresnel * 0.35 + scan + pulse * 0.5;
-      alpha = clamp(alpha, 0.0, 0.5);
+      alpha += darkPatch * 0.18 + brightPatch * 0.22;
+      alpha = clamp(alpha, 0.0, 0.6);
 
       gl_FragColor = vec4(color, alpha);
     }
@@ -233,7 +270,7 @@ const coreMat = new THREE.ShaderMaterial({
 });
 
 const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-coreMesh.position.set(0, 0.9, 0);
+coreMesh.position.set(0, 0.55, 0);
 scene.add(coreMesh);
 
 // Halo
@@ -318,7 +355,7 @@ scene.add(ring2.mesh);
 const ring3 = createShaderRing(1.4, 0xc9a84c, 2.5);
 ring3.mesh.rotation.x = -Math.PI / 3;
 ring3.mesh.rotation.z = Math.PI / 6;
-ring3.mesh.position.y = 0.9;
+ring3.mesh.position.y = 0.55;
 scene.add(ring3.mesh);
 
 // ═══════════ PARTICLES ═══════════
@@ -387,7 +424,7 @@ const particles = new THREE.Points(pGeo, pMat);
 scene.add(particles);
 
 // ═══════════ ENERGY BEAMS ═══════════
-const beamGeo = new THREE.PlaneGeometry(0.06, 4.0, 1, 32);
+const beamGeo = new THREE.PlaneGeometry(0.06, 3.0, 1, 32);
 const beamMat = new THREE.ShaderMaterial({
   uniforms: {
     uTime: { value: 0 },
@@ -411,7 +448,7 @@ const beamMat = new THREE.ShaderMaterial({
 });
 
 const beam = new THREE.Mesh(beamGeo, beamMat);
-beam.position.set(0, 2.8, 0);
+beam.position.set(0, 1.7, 0);
 scene.add(beam);
 const beam2 = beam.clone();
 beam2.rotation.y = Math.PI / 2;
