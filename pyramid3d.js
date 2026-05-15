@@ -22,8 +22,8 @@ renderer.toneMappingExposure = 1.4;
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-camera.position.set(0, 1.6, 5.5);
-camera.lookAt(0, 0.7, 0);
+camera.position.set(0, 1.4, 5.8);
+camera.lookAt(0, 0.5, 0);
 
 // ═══════════ LIGHTS ═══════════
 scene.add(new THREE.AmbientLight(0x0a0a2e, 0.3));
@@ -41,8 +41,8 @@ fillLight.position.set(-3, 1.5, 2);
 scene.add(fillLight);
 
 // ═══════════ PYRAMID GEOMETRY ═══════════
-const pyrH = 2.4;
-const pyrBase = 1.7;
+const pyrH = 1.7;
+const pyrBase = 2.6;
 const half = pyrBase / 2;
 const apex = new THREE.Vector3(0, pyrH, 0);
 const corners = [
@@ -233,7 +233,7 @@ const coreMat = new THREE.ShaderMaterial({
 });
 
 const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-coreMesh.position.set(0, 0.9, 0);
+coreMesh.position.set(0, 0.65, 0);
 scene.add(coreMesh);
 
 // Halo
@@ -305,20 +305,20 @@ function createShaderRing(radius, color, speed) {
   return { mesh: new THREE.Mesh(geo, mat), mat };
 }
 
-const ring1 = createShaderRing(1.3, 0xc9a84c, 3.0);
+const ring1 = createShaderRing(1.8, 0xc9a84c, 3.0);
 ring1.mesh.rotation.x = -Math.PI / 2;
 ring1.mesh.position.y = 0.05;
 scene.add(ring1.mesh);
 
-const ring2 = createShaderRing(1.7, 0x3b82f6, -2.0);
+const ring2 = createShaderRing(2.2, 0x3b82f6, -2.0);
 ring2.mesh.rotation.x = -Math.PI / 2;
 ring2.mesh.position.y = 0.05;
 scene.add(ring2.mesh);
 
-const ring3 = createShaderRing(1.4, 0xc9a84c, 2.5);
+const ring3 = createShaderRing(1.8, 0xc9a84c, 2.5);
 ring3.mesh.rotation.x = -Math.PI / 3;
 ring3.mesh.rotation.z = Math.PI / 6;
-ring3.mesh.position.y = 0.9;
+ring3.mesh.position.y = 0.65;
 scene.add(ring3.mesh);
 
 // ═══════════ PARTICLES ═══════════
@@ -333,7 +333,7 @@ for (let i = 0; i < particleCount; i++) {
   const phi = Math.random() * Math.PI;
   const r = 1.0 + Math.random() * 3.5;
   pPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-  pPos[i * 3 + 1] = (r * Math.cos(phi)) * 0.7 + 0.9;
+  pPos[i * 3 + 1] = (r * Math.cos(phi)) * 0.5 + 0.65;
   pPos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
   pRand[i] = Math.random();
   pSpeed[i] = 0.5 + Math.random() * 1.5;
@@ -411,14 +411,14 @@ const beamMat = new THREE.ShaderMaterial({
 });
 
 const beam = new THREE.Mesh(beamGeo, beamMat);
-beam.position.set(0, 2.8, 0);
+beam.position.set(0, 2.2, 0);
 scene.add(beam);
 const beam2 = beam.clone();
 beam2.rotation.y = Math.PI / 2;
 scene.add(beam2);
 
 // ═══════════ GROUND GLOW ═══════════
-const groundGeo = new THREE.PlaneGeometry(5, 5, 1, 1);
+const groundGeo = new THREE.PlaneGeometry(6, 6, 1, 1);
 const groundMat = new THREE.ShaderMaterial({
   uniforms: {
     uTime: { value: 0 },
@@ -503,8 +503,8 @@ const clock = new THREE.Clock();
 let curRotY = 0, curRotX = 0;
 
 // Camera base values
-const camBaseZ = 5.5;
-const camBaseY = 1.6;
+const camBaseZ = 5.8;
+const camBaseY = 1.4;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -545,7 +545,7 @@ function animate() {
   // Camera: pull back + lower gaze as pyramid ascends
   camera.position.z = camBaseZ + sp * 3.0;
   camera.position.y = camBaseY - sp * 0.6;
-  camera.lookAt(0, 0.7 + sp * 1.0, 0);
+  camera.lookAt(0, 0.5 + sp * 1.0, 0);
 
   // Bloom: intensify → more ethereal as hero fades
   bloomPass.strength = 1.5 + sp * 2.0;
