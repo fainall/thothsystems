@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thoth Systems — Arquitectura Digital Ancestral</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ═══════════ PRELOADER ═══════════ -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-inner">
+      <svg viewBox="0 0 200 200" class="preloader-eye" width="120" height="120">
+        <defs>
+          <filter id="preGlow"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+        <path d="M30,100 Q100,40 170,100 Q100,160 30,100Z" fill="none" stroke="var(--gold)" stroke-width="2" class="pre-eye-shape" filter="url(#preGlow)"/>
+        <circle cx="100" cy="100" r="20" fill="none" stroke="var(--blue-glow)" stroke-width="2" class="pre-iris"/>
+        <circle cx="100" cy="100" r="6" fill="var(--gold)" class="pre-pupil"/>
+        <path d="M100,120 Q96,160 100,185" fill="none" stroke="var(--gold)" stroke-width="1.5" class="pre-tear"/>
+      </svg>
+      <div class="preloader-text" id="preloaderText">INICIALIZANDO</div>
+      <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderBar"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ OVERLAYS ═══════════ -->
+  <div class="film-grain"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="custom-cursor" id="customCursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+    <div class="cursor-text"></div>
+  </div>
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- ═══════════ PROGRESS THREAD ═══════════ -->
+  <div class="progress-thread" id="progressThread">
+    <div class="progress-fill" id="progressFill"></div>
+    <div class="progress-nodes">
+      <div class="p-node active" data-section="hero"></div>
+      <div class="p-node" data-section="about"></div>
+      <div class="p-node" data-section="services"></div>
+      <div class="p-node" data-section="tech"></div>
+      <div class="p-node" data-section="contact"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ NAV ═══════════ -->
+  <nav class="nav" id="mainNav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 50 50" class="logo-svg">
+            <polygon points="25,2 48,45 2,45" fill="none" stroke="var(--gold)" stroke-width="1.5"/>
+            <polygon points="25,12 38,40 12,40" fill="none" stroke="var(--gold-dim)" stroke-width="0.8"/>
+            <circle cx="25" cy="28" r="4" fill="var(--gold)" opacity="0.6"/>
+            <line x1="25" y1="24" x2="25" y2="2" stroke="var(--gold)" stroke-width="0.5" opacity="0.4"/>
+          </svg>
+        </div>
+        <span class="logo-text">THOTH<span class="logo-accent">SYSTEMS</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#about" class="nav-link">Origen</a>
+        <a href="#services" class="nav-link">Artefactos</a>
+        <a href="#tech" class="nav-link">Tecnología</a>
+        <a href="#contact" class="nav-link">Contacto</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" class="mobile-link">Origen</a>
+    <a href="#services" class="mobile-link">Artefactos</a>
+    <a href="#tech" class="mobile-link">Tecnología</a>
+    <a href="#contact" class="mobile-link">Contacto</a>
+  </div>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-vignette"></div>
+    <div class="hero-hieroglyphs">
+      <span>𓀀</span><span>𓁀</span><span>𓂀</span><span>𓃀</span><span>𓄀</span>
+      <span>𓅀</span><span>𓆀</span><span>𓇀</span><span>𓈀</span><span>𓉀</span>
+      <span>𓊀</span><span>𓋀</span><span>𓌀</span><span>𓍀</span><span>𓎀</span>
+      <span>𓏀</span><span>𓐀</span><span>𓀁</span><span>𓁁</span><span>𓂁</span>
+    </div>
+
+    <!-- Scanning line overlay -->
+    <div class="hero-scanline"></div>
+
+    <!-- Horizontal tech lines -->
+    <div class="hero-hline hero-hline-1"></div>
+    <div class="hero-hline hero-hline-2"></div>
+    <div class="hero-hline hero-hline-3"></div>
+
+    <!-- Decorative geometric accents -->
+    <div class="hero-geo geo-1">
+      <svg viewBox="0 0 120 120" width="120" height="120"><circle cx="60" cy="60" r="58" fill="none" stroke="var(--gold)" stroke-width="0.5" opacity="0.2"/><circle cx="60" cy="60" r="38" fill="none" stroke="var(--gold)" stroke-width="0.3" opacity="0.12" stroke-dasharray="4 8"/></svg>
+    </div>
+    <div class="hero-geo geo-2">
+      <svg viewBox="0 0 80 80" width="80" height="80"><polygon points="40,2 78,78 2,78" fill="none" stroke="var(--gold)" stroke-width="0.5" opacity="0.15"/></svg>
+    </div>
+    <div class="hero-geo geo-3">
+      <svg viewBox="0 0 60 60" width="60" height="60"><rect x="5" y="5" width="50" height="50" fill="none" stroke="var(--blue-glow)" stroke-width="0.4" opacity="0.15" transform="rotate(45 30 30)"/></svg>
+    </div>
+    <div class="hero-geo geo-4">
+      <svg viewBox="0 0 140 140" width="140" height="140"><circle cx="70" cy="70" r="68" fill="none" stroke="var(--blue-glow)" stroke-width="0.3" opacity="0.08" stroke-dasharray="2 12"/><circle cx="70" cy="70" r="50" fill="none" stroke="var(--gold)" stroke-width="0.4" opacity="0.1"/></svg>
+    </div>
+    <div class="hero-accent-line hero-accent-line-1"></div>
+    <div class="hero-accent-line hero-accent-line-2"></div>
+    <div class="hero-accent-line hero-accent-line-3"></div>
+
+    <!-- Floating tech data -->
+    <div class="hero-data hero-data-1"><span>SYS.ACTIVE</span></div>
+    <div class="hero-data hero-data-2"><span>48.8566° N</span></div>
+    <div class="hero-data hero-data-3"><span>Δ 0x7F3A</span></div>
+
+    <!-- Full-bleed 3D scene -->
+    <canvas id="pyramidCanvas"></canvas>
+
+    <!-- HUD Corner Brackets -->
+    <div class="hud-bracket hud-tl"></div>
+    <div class="hud-bracket hud-tr"></div>
+    <div class="hud-bracket hud-bl"></div>
+    <div class="hud-bracket hud-br"></div>
+
+    <!-- Side Data Panels -->
+    <div class="hud-side hud-side-left">
+      <div class="hud-tag">// THOTH.CORE <span>v4.7</span></div>
+      <div class="hud-metric">
+        <span class="hud-metric-label">LATENCIA</span>
+        <span class="hud-metric-val">12ms</span>
+      </div>
+      <div class="hud-metric">
+        <span class="hud-metric-label">NODOS</span>
+        <span class="hud-metric-val">2,048</span>
+      </div>
+      <div class="hud-pulse-line"></div>
+    </div>
+
+    <div class="hud-side hud-side-right">
+      <div class="hud-tag">CIPHER.LAYER <span>ACTIVE</span></div>
+      <div class="hud-metric">
+        <span class="hud-metric-label">UPTIME</span>
+        <span class="hud-metric-val">99.97%</span>
+      </div>
+      <div class="hud-metric">
+        <span class="hud-metric-label">EPOCH</span>
+        <span class="hud-metric-val">IV</span>
+      </div>
+      <div class="hud-pulse-line"></div>
+    </div>
+
+    <!-- Status Indicators -->
+    <div class="hud-status hud-status-1">
+      <span class="hud-dot"></span> CORE ONLINE
+    </div>
+    <div class="hud-status hud-status-2">
+      <span class="hud-dot hud-dot-blue"></span> SHIELD ACTIVE
+    </div>
+    <div class="hud-status hud-status-3">
+      <span class="hud-dot"></span> SYNC 100%
+    </div>
+
+    <!-- Vertical Side Labels -->
+    <div class="hud-vlabel hud-vlabel-left">DIMENSIONAL GATEWAY // 001</div>
+    <div class="hud-vlabel hud-vlabel-right">PROTOCOL THOTH // ENCRYPTED</div>
+
+    <!-- Bottom Tech Line -->
+    <div class="hud-bottom-line">
+      <div class="hud-bottom-dot"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge reveal-up">
+        <span class="badge-dot"></span>
+        Arquitectura Digital de Nueva Era
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-line reveal-up" data-delay="100">
+          <span class="glitch-text" data-text="THOTH">THOTH</span>
+        </span>
+        <span class="title-line reveal-up" data-delay="200">
+          <span class="title-outline scramble-target" data-final="SYSTEMS">SYSTEMS</span>
+        </span>
+      </h1>
+
+      <p class="hero-subtitle reveal-up" data-delay="350">
+        Donde la sabiduría ancestral converge con la ingeniería del futuro.
+        <br>Construimos sistemas que trascienden.
+      </p>
+
+      <div class="hero-actions reveal-up" data-delay="500">
+        <a href="#services" class="btn-primary">
+          <span>Explorar Artefactos</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+        <a href="#contact" class="btn-ghost">
+          <span>Iniciar Conexión</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom stats bar -->
+    <div class="hero-bottom">
+      <div class="hero-stats reveal-up" data-delay="650">
+        <div class="stat">
+          <span class="stat-number" data-count="150">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Proyectos Completados</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-count="15">0</span>
+          <span class="stat-label">Artefactos de Poder</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-count="99">0</span><span class="stat-plus">%</span>
+          <span class="stat-label">Satisfacción del Cliente</span>
+        </div>
+      </div>
+      <div class="hero-scroll-indicator">
+        <div class="scroll-line"></div>
+        <span>SCROLL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ MARQUEE 1 ═══════════ -->
+  <div class="marquee-band">
+    <div class="marquee-track">
+      <span>DESARROLLO DE SOFTWARE</span><span class="marquee-dot">𓂀</span>
+      <span>INTELIGENCIA ARTIFICIAL</span><span class="marquee-dot">𓋹</span>
+      <span>CIBERSEGURIDAD</span><span class="marquee-dot">𓅃</span>
+      <span>CLOUD COMPUTING</span><span class="marquee-dot">𓇳</span>
+      <span>AUTOMATIZACIÓN RPA</span><span class="marquee-dot">𓊽</span>
+      <span>ANÁLISIS DE DATOS</span><span class="marquee-dot">𓂀</span>
+      <span>DESARROLLO WEB</span><span class="marquee-dot">𓋹</span>
+      <span>CONSULTORÍA</span><span class="marquee-dot">𓅃</span>
+      <span>DESARROLLO DE SOFTWARE</span><span class="marquee-dot">𓂀</span>
+      <span>INTELIGENCIA ARTIFICIAL</span><span class="marquee-dot">𓋹</span>
+      <span>CIBERSEGURIDAD</span><span class="marquee-dot">𓅃</span>
+      <span>CLOUD COMPUTING</span><span class="marquee-dot">𓇳</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ ABOUT ═══════════════════ -->
+  <section class="section about" id="about">
+    <div class="section-bg-pattern"></div>
+    <div class="energy-line energy-line-left"></div>
+
+    <!-- Section HUD -->
+    <div class="sec-corner sec-tl"></div>
+    <div class="sec-corner sec-tr"></div>
+    <div class="sec-corner sec-bl"></div>
+    <div class="sec-corner sec-br"></div>
+    <div class="sec-tech-id sec-tech-id-l">ORIGIN.DATA // 002</div>
+    <div class="sec-tech-id sec-tech-id-r">DECODE LAYER</div>
+    <div class="sec-glow-edge sec-glow-edge-top"></div>
+    <div class="sec-glow-edge sec-glow-edge-bottom"></div>
+    <div class="sec-scan"></div>
+
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag reveal-up">— EL ORIGEN —</span>
+        <h2 class="section-title split-reveal">
+          La Sabiduría de <span class="text-gold">Thoth</span><br>
+          en Código Binario
+        </h2>
+        <div class="title-ornament reveal-up" data-delay="200">
+          <span class="ornament-line"></span>
+          <svg viewBox="0 0 30 30" width="30" height="30">
+            <circle cx="15" cy="15" r="6" fill="none" stroke="var(--gold)" stroke-width="1"/>
+            <circle cx="15" cy="15" r="2" fill="var(--gold)"/>
+            <line x1="15" y1="0" x2="15" y2="9" stroke="var(--gold)" stroke-width="0.5" opacity="0.5"/>
+            <line x1="15" y1="21" x2="15" y2="30" stroke="var(--gold)" stroke-width="0.5" opacity="0.5"/>
+            <line x1="0" y1="15" x2="9" y2="15" stroke="var(--gold)" stroke-width="0.5" opacity="0.5"/>
+            <line x1="21" y1="15" x2="30" y2="15" stroke="var(--gold)" stroke-width="0.5" opacity="0.5"/>
+          </svg>
+          <span class="ornament-line"></span>
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text reveal-left">
+          <p class="about-lead">
+            Somos arquitectos de soluciones digitales que fusionan la precisión milenaria
+            con tecnología de vanguardia.
+          </p>
+          <p>Como Thoth, el dios egipcio del conocimiento y la escritura, canalizamos
+            la sabiduría para diseñar, construir y proteger ecosistemas digitales
+            que transforman industrias completas.</p>
+          <p>Cada línea de código que escribimos es un jeroglífico del futuro —
+            preciso, significativo e inmutable.</p>
+          <div class="about-features">
+            <div class="about-feature">
+              <div class="feature-icon"><svg viewBox="0 0 40 40"><polygon points="20,4 36,36 4,36" fill="none" stroke="var(--gold)" stroke-width="1.2"/><circle cx="20" cy="24" r="3" fill="var(--blue-glow)" opacity="0.8"/></svg></div>
+              <div><h4>Visión Ancestral</h4><p>Estrategias probadas por milenios de evolución tecnológica</p></div>
+            </div>
+            <div class="about-feature">
+              <div class="feature-icon"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="var(--gold)" stroke-width="1.2"/><path d="M12,20 Q20,8 28,20 Q20,32 12,20Z" fill="none" stroke="var(--blue-glow)" stroke-width="1"/><circle cx="20" cy="20" r="3" fill="var(--gold)"/></svg></div>
+              <div><h4>Ojo de Horus</h4><p>Monitoreo y protección total de cada sistema desplegado</p></div>
+            </div>
+            <div class="about-feature">
+              <div class="feature-icon"><svg viewBox="0 0 40 40"><rect x="8" y="12" width="24" height="16" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.2"/><line x1="8" y1="20" x2="32" y2="20" stroke="var(--gold)" stroke-width="0.6"/><circle cx="20" cy="26" r="2" fill="var(--blue-glow)"/></svg></div>
+              <div><h4>Código Inmutable</h4><p>Arquitecturas sólidas como las pirámides de Giza</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-visual reveal-right">
+          <div class="eye-of-horus">
+            <svg viewBox="0 0 300 300" class="horus-svg">
+              <defs>
+                <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="var(--blue-glow)" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="transparent"/>
+                </radialGradient>
+                <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter>
+              </defs>
+              <circle cx="150" cy="150" r="140" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3" class="svg-draw"/>
+              <circle cx="150" cy="150" r="100" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3" class="svg-draw"/>
+              <circle cx="150" cy="150" r="60" fill="url(#eyeGlow)"/>
+              <path d="M60,150 Q150,80 240,150 Q150,220 60,150Z" fill="none" stroke="var(--gold)" stroke-width="2" filter="url(#glow)" class="eye-outline svg-draw"/>
+              <circle cx="150" cy="150" r="25" fill="none" stroke="var(--blue-glow)" stroke-width="2" class="eye-iris svg-draw"/>
+              <circle cx="150" cy="150" r="10" fill="var(--gold)" class="eye-pupil"/>
+              <path d="M150,175 Q145,220 150,260 Q155,220 150,175Z" fill="none" stroke="var(--gold)" stroke-width="1.5" class="eye-tear svg-draw"/>
+              <path d="M50,130 Q150,60 250,130" fill="none" stroke="var(--gold)" stroke-width="1.2" opacity="0.6" class="svg-draw"/>
+              <path d="M240,150 Q260,170 250,190 Q240,200 230,195" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.5" class="svg-draw"/>
+              <path d="M60,150 Q40,170 50,190 Q60,200 70,195" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.5" class="svg-draw"/>
+              <circle r="3" fill="var(--gold)" opacity="0.8">
+                <animateMotion dur="8s" repeatCount="indefinite" path="M150,10 A140,140 0 1,1 149.9,10"/>
+              </circle>
+              <circle r="2" fill="var(--blue-glow)" opacity="0.6">
+                <animateMotion dur="12s" repeatCount="indefinite" path="M150,50 A100,100 0 1,0 150.1,50"/>
+              </circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ENERGY DIVIDER ═══════════ -->
+  <div class="energy-divider">
+    <svg viewBox="0 0 1200 4" preserveAspectRatio="none" width="100%" height="4">
+      <line x1="0" y1="2" x2="1200" y2="2" stroke="url(#energyGrad)" stroke-width="1"/>
+      <defs><linearGradient id="energyGrad"><stop offset="0%" stop-color="transparent"/><stop offset="50%" stop-color="var(--gold)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
+    </svg>
+    <div class="energy-pulse"></div>
+  </div>
+
+  <!-- ═══════════════════ SERVICES — BENTO GRID ═══════════════════ -->
+  <section class="section services" id="services">
+    <div class="sec-grid-bg"></div>
+
+    <!-- Section HUD -->
+    <div class="sec-corner sec-tl"></div>
+    <div class="sec-corner sec-tr"></div>
+    <div class="sec-corner sec-bl"></div>
+    <div class="sec-corner sec-br"></div>
+    <div class="sec-tech-id sec-tech-id-l">ARTIFACT.GRID // 003</div>
+    <div class="sec-tech-id sec-tech-id-r">15 MODULES LOADED</div>
+    <div class="sec-glow-edge sec-glow-edge-top"></div>
+    <div class="sec-glow-edge sec-glow-edge-bottom"></div>
+    <div class="sec-scan"></div>
+
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag reveal-up">— ARTEFACTOS DE PODER —</span>
+        <h2 class="section-title split-reveal">
+          15 Disciplinas.<br><span class="text-gold">Una Arquitectura.</span>
+        </h2>
+        <div class="title-ornament reveal-up" data-delay="200">
+          <span class="ornament-line"></span>
+          <svg viewBox="0 0 30 30" width="30" height="30"><polygon points="15,2 28,28 2,28" fill="none" stroke="var(--gold)" stroke-width="1"/><circle cx="15" cy="18" r="3" fill="var(--gold)" opacity="0.5"/></svg>
+          <span class="ornament-line"></span>
+        </div>
+      </div>
+
+      <div class="bento-grid" id="servicesGrid">
+        <!-- Row 1: 3 cards, first one bigger -->
+        <div class="service-card bento-wide tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><path d="M25,55 Q20,45 25,35 Q30,25 40,22 Q45,21 48,24" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><path d="M48,24 Q55,20 58,22 Q56,24 52,25 Q48,26 48,24Z" fill="var(--gold)" opacity="0.8"/><path d="M40,22 Q42,30 38,40 Q35,48 30,55" fill="none" stroke="var(--gold)" stroke-width="1.2" class="svg-draw"/><circle cx="52" cy="22" r="1.5" fill="var(--blue-glow)"/><path d="M30,55 L25,60 M30,55 L35,60" stroke="var(--gold)" stroke-width="1"/></svg>
+          </div>
+          <h3 class="card-title">Desarrollo de Software</h3>
+          <p class="card-desc">Arquitecturas robustas y escalables talladas con precisión milenaria</p>
+          <div class="card-hieroglyph">𓅃</div>
+          <div class="card-number">01</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><polygon points="40,12 62,52 18,52" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><polygon points="40,22 52,46 28,46" fill="none" stroke="var(--gold)" stroke-width="0.8" opacity="0.6" class="svg-draw"/><rect x="34" y="32" width="12" height="12" fill="none" stroke="var(--blue-glow)" stroke-width="1" transform="rotate(45 40 38)"/><circle cx="40" cy="38" r="2" fill="var(--blue-glow)"/></svg>
+          </div>
+          <h3 class="card-title">Desarrollo Web</h3>
+          <p class="card-desc">Portales digitales que conectan dimensiones</p>
+          <div class="card-hieroglyph">𓊽</div>
+          <div class="card-number">02</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><path d="M18,40 Q40,25 62,40 Q40,55 18,40Z" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><circle cx="40" cy="40" r="8" fill="none" stroke="var(--blue-glow)" stroke-width="1.2" class="svg-draw"/><circle cx="40" cy="40" r="3" fill="var(--gold)"/><path d="M40,48 Q38,58 40,65" fill="none" stroke="var(--gold)" stroke-width="1.2" class="svg-draw"/></svg>
+          </div>
+          <h3 class="card-title">Inteligencia Artificial</h3>
+          <p class="card-desc">Consciencia digital del Ojo de Horus</p>
+          <div class="card-hieroglyph">𓂀</div>
+          <div class="card-number">03</div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><path d="M28,55 L28,30 Q28,18 40,15 Q52,18 52,30 L52,55" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><path d="M28,30 L22,35 L22,50 L28,48" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.7"/><path d="M52,30 L58,35 L58,50 L52,48" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.7"/><circle cx="35" cy="36" r="2" fill="var(--blue-glow)"/><circle cx="45" cy="36" r="2" fill="var(--blue-glow)"/></svg>
+          </div>
+          <h3 class="card-title">Automatización y RPA</h3>
+          <p class="card-desc">Disciplina de mil escribas digitales</p>
+          <div class="card-hieroglyph">𓀭</div>
+          <div class="card-number">04</div>
+        </div>
+
+        <div class="service-card bento-wide tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><path d="M40,15 L58,25 L58,42 Q58,58 40,65 Q22,58 22,42 L22,25Z" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><circle cx="40" cy="32" r="5" fill="none" stroke="var(--blue-glow)" stroke-width="1.2" class="svg-draw"/><line x1="40" y1="37" x2="40" y2="55" stroke="var(--blue-glow)" stroke-width="1.2"/><line x1="34" y1="44" x2="46" y2="44" stroke="var(--blue-glow)" stroke-width="1.2"/></svg>
+          </div>
+          <h3 class="card-title">Ciberseguridad</h3>
+          <p class="card-desc">Escudos digitales forjados con la protección del Ankh sagrado</p>
+          <div class="card-hieroglyph">𓋹</div>
+          <div class="card-number">05</div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><rect x="24" y="15" width="32" height="50" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><line x1="24" y1="28" x2="56" y2="28" stroke="var(--gold)" stroke-width="0.8"/><line x1="24" y1="41" x2="56" y2="41" stroke="var(--gold)" stroke-width="0.8"/><circle cx="50" cy="22" r="2" fill="var(--blue-glow)"/><circle cx="50" cy="35" r="2" fill="var(--gold)" opacity="0.6"/></svg>
+          </div>
+          <h3 class="card-title">Servidores y Cloud</h3>
+          <p class="card-desc">Pilares indestructibles de infraestructura</p>
+          <div class="card-hieroglyph">𓉐</div>
+          <div class="card-number">06</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><ellipse cx="40" cy="22" rx="18" ry="7" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><line x1="22" y1="22" x2="22" y2="58" stroke="var(--gold)" stroke-width="1.5"/><line x1="58" y1="22" x2="58" y2="58" stroke="var(--gold)" stroke-width="1.5"/><ellipse cx="40" cy="58" rx="18" ry="7" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><circle cx="40" cy="40" r="4" fill="var(--blue-glow)" opacity="0.5"/></svg>
+          </div>
+          <h3 class="card-title">Bases de Datos</h3>
+          <p class="card-desc">Bibliotecas de Alejandría digitales</p>
+          <div class="card-hieroglyph">𓏏</div>
+          <div class="card-number">07</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><path d="M20,45 Q15,35 25,30 Q28,22 38,22 Q48,18 55,28 Q65,30 62,40 Q65,50 55,50 L25,50 Q15,50 20,45Z" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><path d="M30,38 Q40,32 50,38 Q40,44 30,38Z" fill="none" stroke="var(--blue-glow)" stroke-width="1"/><circle cx="40" cy="38" r="3" fill="var(--gold)"/></svg>
+          </div>
+          <h3 class="card-title">Cloud Computing</h3>
+          <p class="card-desc">Cómputo celestial sin límites terrenales</p>
+          <div class="card-hieroglyph">𓇳</div>
+          <div class="card-number">08</div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="service-card bento-wide tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><rect x="28" y="14" width="24" height="52" rx="3" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><circle cx="40" cy="33" r="4" fill="none" stroke="var(--blue-glow)" stroke-width="1"/><line x1="40" y1="37" x2="40" y2="50" stroke="var(--blue-glow)" stroke-width="1"/><line x1="35" y1="42" x2="45" y2="42" stroke="var(--blue-glow)" stroke-width="1"/></svg>
+          </div>
+          <h3 class="card-title">Desarrollo Móvil</h3>
+          <p class="card-desc">El poder de los dioses en la palma de tu mano</p>
+          <div class="card-hieroglyph">𓋹</div>
+          <div class="card-number">09</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><rect x="18" y="18" width="44" height="32" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><line x1="30" y1="50" x2="50" y2="50" stroke="var(--gold)" stroke-width="1.5"/><line x1="40" y1="50" x2="40" y2="56" stroke="var(--gold)" stroke-width="1.2"/><text x="28" y="38" font-family="monospace" font-size="12" fill="var(--blue-glow)" opacity="0.8">&lt;/&gt;</text></svg>
+          </div>
+          <h3 class="card-title">Mantenimiento</h3>
+          <p class="card-desc">Guardianes eternos del sistema</p>
+          <div class="card-hieroglyph">𓊝</div>
+          <div class="card-number">10</div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><circle cx="35" cy="35" r="15" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><line x1="46" y1="46" x2="60" y2="60" stroke="var(--gold)" stroke-width="2"/><path d="M27,35 Q35,28 43,35 Q35,42 27,35Z" fill="none" stroke="var(--blue-glow)" stroke-width="1"/><circle cx="35" cy="35" r="3" fill="var(--gold)"/></svg>
+          </div>
+          <h3 class="card-title">Testing y QA</h3>
+          <p class="card-desc">Rituales de perfección absoluta</p>
+          <div class="card-hieroglyph">𓂋</div>
+          <div class="card-number">11</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><line x1="18" y1="60" x2="18" y2="20" stroke="var(--gold)" stroke-width="1"/><line x1="18" y1="60" x2="62" y2="60" stroke="var(--gold)" stroke-width="1"/><rect x="24" y="42" width="8" height="18" fill="var(--gold)" opacity="0.3"/><rect x="36" y="30" width="8" height="30" fill="var(--gold)" opacity="0.4"/><rect x="48" y="22" width="8" height="38" fill="var(--gold)" opacity="0.5"/><polyline points="24,40 36,28 48,20 58,16" fill="none" stroke="var(--blue-glow)" stroke-width="1.5" class="svg-draw"/><circle cx="58" cy="16" r="3" fill="var(--blue-glow)"/></svg>
+          </div>
+          <h3 class="card-title">Análisis de Datos</h3>
+          <p class="card-desc">Jeroglíficos del mercado decodificados</p>
+          <div class="card-hieroglyph">𓃭</div>
+          <div class="card-number">12</div>
+        </div>
+
+        <div class="service-card bento-wide tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><rect x="24" y="24" width="32" height="32" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><circle cx="40" cy="34" r="4" fill="none" stroke="var(--blue-glow)" stroke-width="1"/><line x1="40" y1="38" x2="40" y2="50" stroke="var(--blue-glow)" stroke-width="1"/><line x1="35" y1="43" x2="45" y2="43" stroke="var(--blue-glow)" stroke-width="1"/><line x1="24" y1="40" x2="15" y2="40" stroke="var(--gold)" stroke-width="0.8" opacity="0.5"/><line x1="56" y1="40" x2="65" y2="40" stroke="var(--gold)" stroke-width="0.8" opacity="0.5"/><circle cx="15" cy="40" r="2" fill="var(--gold)" opacity="0.4"/><circle cx="65" cy="40" r="2" fill="var(--gold)" opacity="0.4"/></svg>
+          </div>
+          <h3 class="card-title">Integración de Sistemas</h3>
+          <p class="card-desc">Ecosistemas digitales conectados en una sola red neural</p>
+          <div class="card-hieroglyph">𓊯</div>
+          <div class="card-number">13</div>
+        </div>
+
+        <!-- Row 6 -->
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><circle cx="40" cy="22" r="6" fill="none" stroke="var(--gold)" stroke-width="1.2" class="svg-draw"/><path d="M40,16 L48,18 L46,20" fill="none" stroke="var(--gold)" stroke-width="1.2"/><circle cx="42" cy="21" r="1" fill="var(--blue-glow)"/><line x1="40" y1="28" x2="40" y2="42" stroke="var(--gold)" stroke-width="1.5"/><line x1="34" y1="34" x2="46" y2="34" stroke="var(--gold)" stroke-width="1.2"/><path d="M40,42 L32,58" stroke="var(--gold)" stroke-width="1.2"/><path d="M40,42 L48,58" stroke="var(--gold)" stroke-width="1.2"/></svg>
+          </div>
+          <h3 class="card-title">Consultoría</h3>
+          <p class="card-desc">Sabiduría del dios escriba Thoth</p>
+          <div class="card-hieroglyph">𓁟</div>
+          <div class="card-number">14</div>
+        </div>
+
+        <div class="service-card tilt-card ">
+          <div class="card-glow"></div><div class="card-border"></div><div class="card-shine"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 80 80" class="icon-draw"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--gold-dim)" stroke-width="0.5" opacity="0.3"/><polygon points="40,14 62,58 18,58" fill="none" stroke="var(--gold)" stroke-width="1.5" class="svg-draw"/><polygon points="40,28 52,52 28,52" fill="none" stroke="var(--gold)" stroke-width="0.6" opacity="0.4"/><circle cx="40" cy="42" r="6" fill="var(--blue-glow)" opacity="0.3"/><circle cx="40" cy="42" r="3" fill="var(--blue-glow)" opacity="0.6"/><line x1="40" y1="14" x2="40" y2="6" stroke="var(--gold)" stroke-width="0.6" opacity="0.5"/></svg>
+          </div>
+          <h3 class="card-title">Capacitación</h3>
+          <p class="card-desc">Conocimiento sagrado a nuevas generaciones</p>
+          <div class="card-hieroglyph">𓊽</div>
+          <div class="card-number">15</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ MARQUEE 2 (reversed) ═══════════ -->
+  <div class="marquee-band marquee-reverse">
+    <div class="marquee-track">
+      <span>REACT</span><span class="marquee-dot">◆</span>
+      <span>PYTHON</span><span class="marquee-dot">◆</span>
+      <span>AWS</span><span class="marquee-dot">◆</span>
+      <span>TENSORFLOW</span><span class="marquee-dot">◆</span>
+      <span>KUBERNETES</span><span class="marquee-dot">◆</span>
+      <span>NEXT.JS</span><span class="marquee-dot">◆</span>
+      <span>DOCKER</span><span class="marquee-dot">◆</span>
+      <span>PYTORCH</span><span class="marquee-dot">◆</span>
+      <span>REACT</span><span class="marquee-dot">◆</span>
+      <span>PYTHON</span><span class="marquee-dot">◆</span>
+      <span>AWS</span><span class="marquee-dot">◆</span>
+      <span>TENSORFLOW</span><span class="marquee-dot">◆</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TECH ═══════════════════ -->
+  <section class="section tech" id="tech">
+    <div class="sec-grid-bg"></div>
+
+    <!-- Section HUD -->
+    <div class="sec-corner sec-tl"></div>
+    <div class="sec-corner sec-tr"></div>
+    <div class="sec-corner sec-bl"></div>
+    <div class="sec-corner sec-br"></div>
+    <div class="sec-tech-id sec-tech-id-l">STACK.MAP // 004</div>
+    <div class="sec-tech-id sec-tech-id-r">NEURAL LINK</div>
+    <div class="sec-glow-edge sec-glow-edge-top"></div>
+    <div class="sec-glow-edge sec-glow-edge-bottom"></div>
+    <div class="sec-scan"></div>
+
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag reveal-up">— TECNOLOGÍA ANCESTRAL —</span>
+        <h2 class="section-title split-reveal">
+          Stack Tecnológico<br><span class="text-gold">del Nuevo Reino</span>
+        </h2>
+        <div class="title-ornament reveal-up" data-delay="200">
+          <span class="ornament-line"></span>
+          <svg viewBox="0 0 30 30" width="30" height="30"><circle cx="15" cy="15" r="12" fill="none" stroke="var(--gold)" stroke-width="0.8"/><path d="M8,15 Q15,8 22,15 Q15,22 8,15Z" fill="none" stroke="var(--gold)" stroke-width="1"/><circle cx="15" cy="15" r="3" fill="var(--gold)"/></svg>
+          <span class="ornament-line"></span>
+        </div>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-category tilt-card" data-delay="0">
+          <h4 class="tech-cat-title">Frontend</h4>
+          <div class="tech-items">
+            <div class="tech-item">React</div><div class="tech-item">Next.js</div><div class="tech-item">Vue</div><div class="tech-item">Angular</div><div class="tech-item">TypeScript</div>
+          </div>
+        </div>
+        <div class="tech-category tilt-card" data-delay="100">
+          <h4 class="tech-cat-title">Backend</h4>
+          <div class="tech-items">
+            <div class="tech-item">Node.js</div><div class="tech-item">Python</div><div class="tech-item">.NET</div><div class="tech-item">Java</div><div class="tech-item">Go</div>
+          </div>
+        </div>
+        <div class="tech-category tilt-card" data-delay="200">
+          <h4 class="tech-cat-title">Cloud & DevOps</h4>
+          <div class="tech-items">
+            <div class="tech-item">AWS</div><div class="tech-item">Azure</div><div class="tech-item">GCP</div><div class="tech-item">Docker</div><div class="tech-item">Kubernetes</div>
+          </div>
+        </div>
+        <div class="tech-category tilt-card" data-delay="300">
+          <h4 class="tech-cat-title">AI & Data</h4>
+          <div class="tech-items">
+            <div class="tech-item">TensorFlow</div><div class="tech-item">PyTorch</div><div class="tech-item">LangChain</div><div class="tech-item">PostgreSQL</div><div class="tech-item">MongoDB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CTA ═══════════════════ -->
+  <!-- ═══════════ ENERGY DIVIDER 2 ═══════════ -->
+  <div class="energy-divider">
+    <svg viewBox="0 0 1200 4" preserveAspectRatio="none" width="100%" height="4">
+      <line x1="0" y1="2" x2="1200" y2="2" stroke="url(#energyGrad3)" stroke-width="1"/>
+      <defs><linearGradient id="energyGrad3"><stop offset="0%" stop-color="transparent"/><stop offset="50%" stop-color="var(--blue-glow)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
+    </svg>
+    <div class="energy-pulse energy-pulse-blue"></div>
+  </div>
+
+  <section class="section cta-section" id="contact">
+    <div class="cta-bg-rays"></div>
+
+    <!-- Section HUD -->
+    <div class="sec-corner sec-tl"></div>
+    <div class="sec-corner sec-tr"></div>
+    <div class="sec-corner sec-bl"></div>
+    <div class="sec-corner sec-br"></div>
+    <div class="sec-tech-id sec-tech-id-l">GATEWAY.INIT // 005</div>
+    <div class="sec-tech-id sec-tech-id-r">PORTAL OPEN</div>
+    <div class="sec-glow-edge sec-glow-edge-top"></div>
+    <div class="sec-glow-edge sec-glow-edge-bottom"></div>
+    <div class="sec-scan"></div>
+
+    <div class="container">
+      <div class="cta-content">
+        <span class="section-tag reveal-up">— INICIAR CONEXIÓN —</span>
+        <h2 class="section-title split-reveal">
+          ¿Listo para construir<br><span class="text-gold">tu monolito digital?</span>
+        </h2>
+        <p class="cta-text reveal-up" data-delay="200">
+          Cada gran civilización comenzó con una decisión. La tuya comienza aquí.
+        </p>
+        <div class="cta-actions reveal-up" data-delay="300">
+          <a href="mailto:contacto@thothsystems.com" class="btn-primary btn-large">
+            <span>Contactar Ahora</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+          </a>
+        </div>
+        <div class="cta-ornament reveal-up" data-delay="400">
+          <svg viewBox="0 0 200 40" width="200" height="40">
+            <line x1="0" y1="20" x2="70" y2="20" stroke="var(--gold)" stroke-width="0.5" opacity="0.4"/>
+            <polygon points="100,5 115,35 85,35" fill="none" stroke="var(--gold)" stroke-width="1"/>
+            <circle cx="100" cy="22" r="4" fill="var(--gold)" opacity="0.3"/>
+            <circle cx="100" cy="22" r="1.5" fill="var(--gold)"/>
+            <line x1="130" y1="20" x2="200" y2="20" stroke="var(--gold)" stroke-width="0.5" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER DIVIDER ═══════════ -->
+  <div class="energy-divider">
+    <svg viewBox="0 0 1200 4" preserveAspectRatio="none" width="100%" height="4">
+      <line x1="0" y1="2" x2="1200" y2="2" stroke="url(#energyGrad4)" stroke-width="1"/>
+      <defs><linearGradient id="energyGrad4"><stop offset="0%" stop-color="transparent"/><stop offset="30%" stop-color="var(--gold)"/><stop offset="50%" stop-color="var(--blue-glow)"/><stop offset="70%" stop-color="var(--gold)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
+    </svg>
+    <div class="energy-pulse"></div>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <div class="logo-icon"><svg viewBox="0 0 50 50" class="logo-svg"><polygon points="25,2 48,45 2,45" fill="none" stroke="var(--gold)" stroke-width="1.5"/><circle cx="25" cy="28" r="4" fill="var(--gold)" opacity="0.6"/></svg></div>
+            <span class="logo-text">THOTH<span class="logo-accent">SYSTEMS</span></span>
+          </div>
+          <p class="footer-tagline">Arquitectura digital ancestral para el futuro.</p>
+        </div>
+        <div class="footer-links-group">
+          <h5>Navegación</h5>
+          <a href="#about">Origen</a><a href="#services">Artefactos</a><a href="#tech">Tecnología</a><a href="#contact">Contacto</a>
+        </div>
+        <div class="footer-links-group">
+          <h5>Servicios</h5>
+          <a href="#services">Desarrollo Web</a><a href="#services">Inteligencia Artificial</a><a href="#services">Ciberseguridad</a><a href="#services">Cloud Computing</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Thoth Systems. Todos los derechos reservados.</p>
+        <div class="footer-hieroglyphs">𓀀 𓁀 𓂀 𓃀 𓄀 𓅀</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script>
+    (function() {
+      var lenis = new Lenis({
+        duration: 1.4,
+        easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 0.8,
+        touchMultiplier: 1.5,
+        infinite: false
+      });
+      window.__lenis = lenis;
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Anchor links smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+          var target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            lenis.scrollTo(target, { offset: -72 });
+          }
+        });
+      });
+
+      // Stop during preloader
+      lenis.stop();
+      window.addEventListener('load', function() {
+        setTimeout(function() { lenis.start(); }, 1800);
+      });
+    })();
+  </script>
+
+  <script src="script.js"></script>
+  <script type="module" src="pyramid3d.js"></script>
+</body>
+</html>
