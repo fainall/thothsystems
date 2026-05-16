@@ -460,7 +460,7 @@ pyrGroup.add(ground);
 pyrGroup.add(particles);
 
 // Pyramid offset down to give header breathing room
-let pyrOffsetY = window.innerWidth < 768 ? -0.2 : -0.5;
+let pyrOffsetY = window.innerWidth < 768 ? -0.05 : -0.5;
 pyrGroup.position.set(0, pyrOffsetY, 0);
 scene.add(pyrGroup);
 
@@ -592,7 +592,7 @@ function onResize() {
   renderer.setSize(w, h);
   composer.setSize(w, h);
   pMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2);
-  pyrOffsetY = w < 768 ? -0.2 : -0.5;
+  pyrOffsetY = w < 768 ? -0.05 : -0.5;
   updateBaseScale();
 }
 
