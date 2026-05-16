@@ -873,6 +873,72 @@ a { color: inherit; text-decoration: none; }
   to   { opacity: 1; transform: scale(1); }
 }
 
+/* ═══════════ EPIC MOBILE HERO ENTRANCES ═══════════ */
+@keyframes epicBadgeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.7);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.05);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes epicSubtitleIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(6px);
+    letter-spacing: 6px;
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-3px);
+    filter: blur(0);
+    letter-spacing: 0px;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    letter-spacing: normal;
+  }
+}
+
+@keyframes epicActionsIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes epicTitleIn {
+  0% {
+    opacity: 0;
+    transform: translateY(35px) scale(0.95);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
 /* Mobile: logo at tip */
 @media (max-width: 767px) {
   .hero-logo-bg {
@@ -1011,9 +1077,10 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.8;
   margin-bottom: 40px;
   max-width: 520px;
+  text-align: center;
 }
 
-.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
 /* ═══════════ BUTTONS ═══════════ */
 
@@ -1603,6 +1670,24 @@ body:not(.loading) .hero .reveal-up {
   transform: translateY(0);
 }
 
+/* On mobile, let epic animations handle timing instead of instant reveal */
+@media (max-width: 767px) {
+  body:not(.loading) .hero .reveal-up {
+    opacity: 0;
+    transform: none;
+    transition: none;
+  }
+  body:not(.loading) .hero .hero-badge.reveal-up {
+    animation: epicBadgeIn 1s var(--ease-out-expo) 0.3s both;
+  }
+  body:not(.loading) .hero .hero-subtitle.reveal-up {
+    animation: epicSubtitleIn 1.2s var(--ease-out-expo) 0.6s both;
+  }
+  body:not(.loading) .hero .hero-actions.reveal-up {
+    animation: epicActionsIn 1s var(--ease-out-expo) 0.9s both;
+  }
+}
+
 /* Split text reveal */
 .split-reveal .split-char {
   display: inline-block;
@@ -1714,15 +1799,28 @@ body:not(.loading) .hero .reveal-up {
     right: 0;
     flex: unset;
     z-index: 5;
-    padding: 0 20px 16px;
+    padding: 0 20px 20px;
+    text-align: center;
+    align-items: center;
+    justify-content: flex-end;
   }
-  .hero-badge,
-  .hero-subtitle { display: none; }
+  /* Badge + subtitle visible on mobile with epic entrances */
+  .hero-badge {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-subtitle {
+    display: block;
+    text-align: center;
+  }
   .hero-actions {
     flex-direction: column;
     width: 100%;
     align-items: stretch;
   }
+
   .hero-stats { flex-direction: column; gap: 20px; }
   .stat-divider { width: 40px; height: 1px; }
   .stat { text-align: center; }
