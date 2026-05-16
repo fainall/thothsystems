@@ -875,12 +875,12 @@ a { color: inherit; text-decoration: none; }
 /* Mobile: smaller logo at tip */
 @media (max-width: 767px) {
   .hero-logo-bg {
-    width: clamp(120px, 35vw, 200px);
+    width: clamp(100px, 28vw, 180px);
   }
 }
 @media (max-width: 480px) {
   .hero-logo-bg {
-    width: clamp(100px, 32vw, 160px);
+    width: clamp(80px, 25vw, 130px);
   }
 }
 
@@ -1705,10 +1705,22 @@ body:not(.loading) .hero .reveal-up {
 }
 
 @media (max-width: 767px) {
-  /* Push hero content below logo+pyramid on mobile */
+  /* Mobile: logo+pyramid top, content absolute bottom */
   .hero-content {
-    justify-content: flex-end;
-    padding-bottom: 3vh;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex: unset;
+    z-index: 5;
+    padding: 0 20px 16px;
+  }
+  .hero-badge,
+  .hero-subtitle { display: none; }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
   }
   .hero-stats { flex-direction: column; gap: 20px; }
   .stat-divider { width: 40px; height: 1px; }
