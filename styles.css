@@ -1705,6 +1705,11 @@ body:not(.loading) .hero .reveal-up {
 }
 
 @media (max-width: 767px) {
+  /* Push hero content below logo+pyramid on mobile */
+  .hero-content {
+    justify-content: flex-end;
+    padding-bottom: 3vh;
+  }
   .hero-stats { flex-direction: column; gap: 20px; }
   .stat-divider { width: 40px; height: 1px; }
   .stat { text-align: center; }
