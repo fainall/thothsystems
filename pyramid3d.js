@@ -22,7 +22,7 @@ renderer.toneMappingExposure = 1.4;
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-camera.position.set(0, 1.4, 5.8);
+camera.position.set(0, 2.0, 5.8);
 camera.lookAt(0, 0.5, 0);
 
 // ═══════════ LIGHTS ═══════════
@@ -519,7 +519,7 @@ let curRotY = 0, curRotX = 0;
 
 // Camera base values
 const camBaseZ = 5.8;
-const camBaseY = 1.4;
+const camBaseY = 2.0;
 
 function animate() {
   requestAnimationFrame(animate);
