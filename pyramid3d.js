@@ -463,6 +463,21 @@ pyrGroup.add(particles);
 pyrGroup.position.set(0, 0, 0);
 scene.add(pyrGroup);
 
+// ═══════════ LOGO APEX TRACKING ═══════════
+const logoEl = document.querySelector('.hero-logo-behind');
+const _apexV = new THREE.Vector3();          // reused each frame
+
+function updateLogoToApex() {
+  if (!logoEl) return;
+  _apexV.set(0, pyrH, 0);                    // apex in local space
+  pyrGroup.localToWorld(_apexV);              // → world (includes rotation/scale/pos)
+  _apexV.project(camera);                     // → NDC  (-1…1)
+  const lx = ( _apexV.x * 0.5 + 0.5) * 100; // → % of container
+  const ly = (-_apexV.y * 0.5 + 0.5) * 100;
+  logoEl.style.left = lx + '%';
+  logoEl.style.top  = ly + '%';
+}
+
 // ═══════════ POST-PROCESSING ═══════════
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
@@ -558,6 +573,9 @@ function animate() {
 
   // Particles spread on scroll
   pMat.uniforms.uTime.value = t + sp * 2;
+
+  // Track logo to pyramid apex
+  updateLogoToApex();
 
   composer.render();
 }
