@@ -22,8 +22,8 @@ renderer.toneMappingExposure = 1.4;
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-camera.position.set(0, 2.8, 5.8);
-camera.lookAt(0, 0.3, 0);
+camera.position.set(0, 2.0, 5.8);
+camera.lookAt(0, 0.5, 0);
 
 // ═══════════ LIGHTS ═══════════
 scene.add(new THREE.AmbientLight(0x0a0a2e, 0.3));
@@ -459,8 +459,9 @@ pyrGroup.add(beam2);
 pyrGroup.add(ground);
 pyrGroup.add(particles);
 
-// Pyramid centered
-pyrGroup.position.set(0, 0, 0);
+// Pyramid offset down to give header breathing room
+const pyrOffsetY = -0.5;
+pyrGroup.position.set(0, pyrOffsetY, 0);
 scene.add(pyrGroup);
 
 // ═══════════ LOGO APEX TRACKING ═══════════
@@ -519,7 +520,7 @@ let curRotY = 0, curRotX = 0;
 
 // Camera base values
 const camBaseZ = 5.8;
-const camBaseY = 2.8;
+const camBaseY = 2.0;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -551,8 +552,8 @@ function animate() {
   pyrGroup.rotation.y = curRotY + t * 0.12 + sp * 0.8;  // extra Y spin on scroll
   pyrGroup.rotation.x = curRotX;
 
-  // Position: float upward on scroll
-  pyrGroup.position.y = sp * 2.0;
+  // Position: float upward on scroll (from offset base)
+  pyrGroup.position.y = pyrOffsetY + sp * 2.0;
 
   // Scale: responsive base × scroll shrink (30% smaller at full scroll)
   pyrGroup.scale.setScalar(baseScale * (1 - sp * 0.35));
@@ -560,7 +561,7 @@ function animate() {
   // Camera: pull back + lower gaze as pyramid ascends
   camera.position.z = camBaseZ + sp * 3.0;
   camera.position.y = camBaseY - sp * 0.6;
-  camera.lookAt(0, 0.3 + sp * 1.0, 0);
+  camera.lookAt(0, 0.5 + sp * 1.0, 0);
 
   // Bloom: intensify → more ethereal as hero fades
   bloomPass.strength = 1.5 + sp * 2.0;
