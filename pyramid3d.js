@@ -22,8 +22,8 @@ renderer.toneMappingExposure = 1.4;
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-camera.position.set(0, 2.0, 5.8);
-camera.lookAt(0, 0.5, 0);
+camera.position.set(0, 2.8, 5.8);
+camera.lookAt(0, 0.3, 0);
 
 // ═══════════ LIGHTS ═══════════
 scene.add(new THREE.AmbientLight(0x0a0a2e, 0.3));
@@ -519,7 +519,7 @@ let curRotY = 0, curRotX = 0;
 
 // Camera base values
 const camBaseZ = 5.8;
-const camBaseY = 2.0;
+const camBaseY = 2.8;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -560,7 +560,7 @@ function animate() {
   // Camera: pull back + lower gaze as pyramid ascends
   camera.position.z = camBaseZ + sp * 3.0;
   camera.position.y = camBaseY - sp * 0.6;
-  camera.lookAt(0, 0.5 + sp * 1.0, 0);
+  camera.lookAt(0, 0.3 + sp * 1.0, 0);
 
   // Bloom: intensify → more ethereal as hero fades
   bloomPass.strength = 1.5 + sp * 2.0;
