@@ -1921,30 +1921,53 @@ body:not(.loading) .hero .reveal-up {
   .title-ornament { margin-top: 16px; gap: 10px; }
   .ornament-line { width: 30px; }
 
-  /* ── About section mobile ── */
+  /* ══ CENTRADO GLOBAL MOBILE — TODOS LOS TEXTOS ══ */
   .about-grid { gap: 40px; }
+
+  .about-text {
+    text-align: center !important;
+  }
 
   .about-lead {
     font-size: 17px;
-    text-align: center;
+    text-align: center !important;
   }
 
   .about-text p {
     font-size: 14px;
-    text-align: center;
+    text-align: center !important;
   }
 
   .about-features { gap: 16px; }
 
   .about-feature {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: center !important;
+    text-align: center !important;
     padding: 16px;
   }
 
-  .about-feature h4 { text-align: center; }
+  .about-feature h4 { text-align: center !important; }
   .about-feature p { text-align: center !important; }
+
+  /* Cards / Services */
+  .card-title { text-align: center !important; }
+  .card-desc { text-align: center !important; }
+  .service-card { text-align: center !important; align-items: center !important; }
+
+  /* Tech section */
+  .tech-category { text-align: center !important; }
+  .tech-cat-title { text-align: center !important; }
+  .tech-item { text-align: center !important; justify-content: center !important; }
+
+  /* CTA section */
+  .cta-text { text-align: center !important; }
+
+  /* Global: cualquier p, h2, h3, h4 dentro de sections */
+  .section p,
+  .section h2,
+  .section h3,
+  .section h4 { text-align: center !important; }
 
   .eye-of-horus {
     width: 220px;
@@ -2045,10 +2068,16 @@ body:not(.loading) .hero .reveal-up {
   }
 
   /* ── About smallest ── */
-  .about-lead { font-size: 15px; }
-  .about-text p { font-size: 13px; }
-  .about-feature { padding: 12px; gap: 10px; }
+  .about-lead { font-size: 15px; text-align: center !important; }
+  .about-text p { font-size: 13px; text-align: center !important; }
+  .about-feature { padding: 12px; gap: 10px; text-align: center !important; }
   .feature-icon { width: 32px; height: 32px; }
+
+  /* Centrado global smallest */
+  .section p,
+  .section h2,
+  .section h3,
+  .section h4 { text-align: center !important; }
 
   .eye-of-horus {
     width: 180px;
