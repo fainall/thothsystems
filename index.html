@@ -4,7 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thoth Systems — Arquitectura Digital Ancestral</title>
+  <meta name="description" content="Thoth Systems — Donde la sabiduría ancestral converge con la ingeniería del futuro. Arquitectura digital, desarrollo web y sistemas que trascienden.">
+  <meta name="theme-color" content="#070714">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Thoth Systems — Arquitectura Digital Ancestral">
+  <meta property="og:description" content="Donde la sabiduría ancestral converge con la ingeniería del futuro. Construimos sistemas que trascienden.">
+  <meta property="og:image" content="https://www.thothsystems.cl/logo-thoth.png">
+  <meta property="og:url" content="https://www.thothsystems.cl/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo-thoth.png">
+  <link rel="apple-touch-icon" href="logo-thoth.png">
+
+  <!-- Preconnect CDNs -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com">
+
+  <!-- Preload critical assets -->
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="preload" href="logo-thoth.png" as="image">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Three.js import map -->
   <script type="importmap">
     {
       "imports": {
@@ -13,9 +40,10 @@
       }
     }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Fonts (non-blocking) -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
 </head>
 <body>
   <!-- ═══════════ PRELOADER ═══════════ -->
@@ -61,7 +89,10 @@
   <nav class="nav" id="mainNav">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo">
-        <img src="logo-thoth.png" alt="Thoth Systems" class="nav-logo-img">
+        <picture>
+          <source srcset="logo-thoth.webp" type="image/webp">
+          <img src="logo-thoth.png" alt="Thoth Systems" class="nav-logo-img">
+        </picture>
       </a>
       <div class="nav-links">
         <a href="#about" class="nav-link">Origen</a>
@@ -181,7 +212,10 @@
 
     <!-- Logo -->
     <div class="hero-logo-behind">
-      <img src="logo-thoth.png" alt="Thoth Systems" class="hero-logo-bg">
+      <picture>
+        <source srcset="logo-thoth.webp" type="image/webp">
+        <img src="logo-thoth.png" alt="Thoth Systems" class="hero-logo-bg">
+      </picture>
     </div>
 
 
@@ -701,7 +735,10 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="nav-logo footer-logo-wrap">
-            <img src="logo-thoth.png" alt="Thoth Systems" class="footer-logo-img">
+            <picture>
+              <source srcset="logo-thoth.webp" type="image/webp">
+              <img src="logo-thoth.png" alt="Thoth Systems" class="footer-logo-img" loading="lazy">
+            </picture>
           </div>
           <p class="footer-tagline">Arquitectura digital ancestral para el futuro.</p>
         </div>
@@ -722,7 +759,7 @@
   </footer>
 
   <!-- Lenis Smooth Scroll -->
-  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
   <script>
     (function() {
       var lenis = new Lenis({
@@ -762,7 +799,7 @@
     })();
   </script>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
   <script type="module" src="pyramid3d.js"></script>
 </body>
 </html>
