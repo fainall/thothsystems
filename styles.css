@@ -856,7 +856,7 @@ a { color: inherit; text-decoration: none; }
   top: 22%;            /* fallback before JS kicks in */
   z-index: 4;
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, calc(-100% - 20px));
   will-change: left, top;
 }
 .hero-logo-bg {
