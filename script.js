@@ -276,7 +276,16 @@
     Array.from(el.childNodes).forEach(processNode);
   }
 
-  document.querySelectorAll('.split-reveal').forEach(splitTextIntoChars);
+  // Skip character splitting on mobile — renders cleaner centered text
+  if (window.innerWidth >= 768) {
+    document.querySelectorAll('.split-reveal').forEach(splitTextIntoChars);
+  } else {
+    // On mobile, just keep split-reveal class for fade-in animation without char splitting
+    document.querySelectorAll('.split-reveal').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+    });
+  }
 
   // ─────────────────── INTERSECTION OBSERVER — REVEAL ───────────────────
   const revealElements = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .split-reveal');
