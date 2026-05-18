@@ -277,14 +277,9 @@
   }
 
   // Skip character splitting on mobile — renders cleaner centered text
+  // CSS handles hidden→revealed transition for mobile via .split-reveal class
   if (window.innerWidth >= 768) {
     document.querySelectorAll('.split-reveal').forEach(splitTextIntoChars);
-  } else {
-    // On mobile, just keep split-reveal class for fade-in animation without char splitting
-    document.querySelectorAll('.split-reveal').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
-    });
   }
 
   // ─────────────────── INTERSECTION OBSERVER — REVEAL ───────────────────
