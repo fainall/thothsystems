@@ -1805,6 +1805,14 @@ body:not(.loading) .hero .reveal-up {
 }
 
 @media (max-width: 767px) {
+  /* ── Nav alignment: logo + hamburger flush with content edges ── */
+  .nav-inner {
+    padding: 0 20px;
+  }
+  .nav-toggle {
+    margin-right: -8px; /* compensate toggle padding so lines align with 20px edge */
+  }
+
   /* Mobile: logo+pyramid top, content absolute bottom */
   .hero-content {
     position: absolute;
