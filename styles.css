@@ -1966,13 +1966,17 @@ body:not(.loading) .hero .reveal-up {
   }
 
   .about-lead {
-    font-size: 17px;
+    font-size: 15px;
     text-align: center !important;
+    color: var(--text-secondary) !important;
+    font-weight: 400 !important;
+    margin-bottom: 24px !important;
   }
 
   .about-text p {
-    font-size: 14px;
+    font-size: 15px;
     text-align: center !important;
+    margin-bottom: 24px !important;
   }
 
   .about-features { gap: 16px; }
@@ -2105,8 +2109,8 @@ body:not(.loading) .hero .reveal-up {
   }
 
   /* ── About smallest ── */
-  .about-lead { font-size: 15px; text-align: center !important; }
-  .about-text p { font-size: 13px; text-align: center !important; }
+  .about-lead { font-size: 14px; text-align: center !important; color: var(--text-secondary) !important; font-weight: 400 !important; margin-bottom: 22px !important; }
+  .about-text p { font-size: 14px; text-align: center !important; margin-bottom: 22px !important; }
   .about-feature { padding: 12px; gap: 10px; text-align: center !important; }
   .feature-icon { width: 32px; height: 32px; }
 
