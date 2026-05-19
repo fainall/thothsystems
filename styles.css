@@ -861,7 +861,7 @@ a { color: inherit; text-decoration: none; }
   will-change: left, top;
 }
 .hero-logo-bg {
-  width: clamp(160px, 22vw, 320px);
+  width: clamp(192px, 26.4vw, 384px);
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 0 20px rgba(201, 168, 76, 0.3))
@@ -942,12 +942,12 @@ a { color: inherit; text-decoration: none; }
 /* Mobile: logo at tip */
 @media (max-width: 767px) {
   .hero-logo-bg {
-    width: clamp(180px, 45vw, 280px);
+    width: clamp(216px, 54vw, 336px);
   }
 }
 @media (max-width: 480px) {
   .hero-logo-bg {
-    width: clamp(150px, 42vw, 240px);
+    width: clamp(180px, 50.4vw, 288px);
   }
 }
 
