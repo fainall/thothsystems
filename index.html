@@ -25,11 +25,11 @@
   <link rel="preconnect" href="https://unpkg.com">
 
   <!-- Preload critical assets -->
-  <link rel="preload" href="styles.css?v=20260519f" as="style">
+  <link rel="preload" href="styles.css?v=20260519g" as="style">
   <link rel="preload" href="logo-thoth.png" as="image">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="styles.css?v=20260519f">
+  <link rel="stylesheet" href="styles.css?v=20260519g">
 
   <!-- Three.js import map -->
   <script type="importmap">
@@ -87,11 +87,11 @@
 
   <!-- ═══════════ NAV ═══════════ -->
   <nav class="nav" id="mainNav">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">
+    <div class="nav-inner" id="navInner">
+      <a href="#hero" class="nav-logo" id="navLogo">
         <picture>
           <source srcset="logo-thoth-text.webp" type="image/webp">
-          <img src="logo-thoth-text.png" alt="Thoth Systems" class="nav-logo-img">
+          <img src="logo-thoth-text.png" alt="Thoth Systems" class="nav-logo-img" id="navLogoImg">
         </picture>
       </a>
       <div class="nav-links">
@@ -105,6 +105,16 @@
       </button>
     </div>
   </nav>
+  <script>
+  if(window.innerWidth<768){
+    var ni=document.getElementById('navInner');
+    var nl=document.getElementById('navLogo');
+    var img=document.getElementById('navLogoImg');
+    if(ni)ni.style.cssText='padding:8px 12px 0 6px!important;height:60px!important';
+    if(nl)nl.style.cssText='padding:0!important;margin:0!important';
+    if(img)img.style.cssText='height:28px!important;transform:translateX(-12px)!important';
+  }
+  </script>
 
   <div class="mobile-menu" id="mobileMenu">
     <a href="#about" class="mobile-link">Origen</a>
