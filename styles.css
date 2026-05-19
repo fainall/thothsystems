@@ -1808,9 +1808,19 @@ body:not(.loading) .hero .reveal-up {
   /* ── Nav alignment: logo + hamburger flush with content edges ── */
   .nav-inner {
     padding: 0 20px;
+    height: 60px;
+  }
+  .nav-logo {
+    padding: 0;
+    margin: 0;
+    height: 28px;
+  }
+  .nav-logo-img {
+    height: 28px;
   }
   .nav-toggle {
     margin-right: -8px; /* compensate toggle padding so lines align with 20px edge */
+    padding: 8px;
   }
 
   /* Mobile: logo+pyramid top, content absolute bottom */
