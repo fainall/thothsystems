@@ -1808,11 +1808,13 @@ body:not(.loading) .hero .reveal-up {
   /* ── Nav alignment: logo + hamburger flush with content edges ── */
   .nav-inner {
     padding: 0 20px;
+    padding-top: 8px;
     height: 60px;
   }
   .nav-logo {
     padding: 0;
     margin: 0;
+    margin-left: -6px; /* compensate logo image internal whitespace */
     height: 28px;
   }
   .nav-logo-img {
