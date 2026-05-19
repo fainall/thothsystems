@@ -1807,22 +1807,21 @@ body:not(.loading) .hero .reveal-up {
 @media (max-width: 767px) {
   /* ── Nav alignment: logo + hamburger flush with content edges ── */
   .nav-inner {
-    padding: 0 20px;
-    padding-top: 8px;
-    height: 60px;
+    padding: 0 12px 0 6px !important;
+    padding-top: 8px !important;
+    height: 60px !important;
   }
   .nav-logo {
-    padding: 0;
-    margin: 0;
-    margin-left: -14px; /* compensate logo image internal whitespace */
-    height: 28px;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 28px !important;
   }
   .nav-logo-img {
-    height: 28px;
+    height: 28px !important;
   }
   .nav-toggle {
-    margin-right: -8px; /* compensate toggle padding so lines align with 20px edge */
-    padding: 8px;
+    margin-right: 0 !important;
+    padding: 8px !important;
   }
 
   /* Mobile: logo+pyramid top, content absolute bottom */
