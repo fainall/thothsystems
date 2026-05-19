@@ -1818,6 +1818,7 @@ body:not(.loading) .hero .reveal-up {
   }
   .nav-logo-img {
     height: 28px !important;
+    transform: translateX(-12px);
   }
   .nav-toggle {
     margin-right: 0 !important;
