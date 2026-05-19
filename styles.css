@@ -2053,6 +2053,15 @@ body:not(.loading) .hero .reveal-up {
   /* ── Footer mobile ── */
   .footer { padding: 40px 0 24px; }
   .footer-grid { gap: 28px; margin-bottom: 28px; }
+  .footer-brand {
+    text-align: left !important;
+  }
+  .footer-logo-wrap {
+    justify-content: flex-start !important;
+  }
+  .footer-logo-img {
+    height: 64px !important;
+  }
   .footer-tagline { font-size: 13px; }
   .footer-links-group a { font-size: 13px; }
   .footer-bottom p { font-size: 11px; }
