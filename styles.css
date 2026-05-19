@@ -1814,7 +1814,7 @@ body:not(.loading) .hero .reveal-up {
   .nav-logo {
     padding: 0;
     margin: 0;
-    margin-left: -6px; /* compensate logo image internal whitespace */
+    margin-left: -14px; /* compensate logo image internal whitespace */
     height: 28px;
   }
   .nav-logo-img {
